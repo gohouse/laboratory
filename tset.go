@@ -1,17 +1,12 @@
 package main
 
-import (
-	"fmt"
-	"time"
-	"reflect"
-)
+import "fmt"
 
 func main() {
 
-	//fmt.Println(time.Now()[:18])
-	timestr := fmt.Sprintf("%s", time.Now())
-	fmt.Println(timestr[:19])
+	a := []int{1,2,3,4,5}
 
-	var a = map[string]interface{} {"a":"b"}
-	fmt.Println(reflect.TypeOf(a["a"]))
+	lenA := len(a)
+
+	fmt.Println(a[lenA-1:])
 }

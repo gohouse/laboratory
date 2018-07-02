@@ -1,25 +1,20 @@
 package main
 
-import (
-	"fmt"
-	"reflect"
-)
+import "fmt"
 
 type Article struct{
+	Info map[string]interface{}
 	Name string
-	Age int
+}
+
+func ArticleInit() *Article {
+	return &Article{Name: "sdfa"}
 }
 
 func main()  {
-	data := &Article{}
-	data.Name = "a"
-	data2 := new(Article)
+	art := ArticleInit()
+	fmt.Println(art.Name)
 
-	data3 := &Article{}
-
-	fmt.Println(data)
-	fmt.Println(reflect.TypeOf(data))
-	fmt.Println(data2)
-	fmt.Println(reflect.TypeOf(data2))
-	fmt.Println(data3)
+	var b = &Article{}
+	fmt.Println(b.Name)
 }

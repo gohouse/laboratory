@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"math"
 )
 
 // 二叉树定义
@@ -14,6 +15,7 @@ type tree struct {
 // 各个方法的值
 type Treer struct {
 	NodeNum int
+	Depth int
 }
 
 type Binary interface {
@@ -36,6 +38,22 @@ type Binary interface {
 	//14.判断二叉树是不是完全二叉树
 }
 
+var sortedTree map[int]int
+
+func init() {
+	sortedTree = make(map[int]int)
+}
+func show(tree *tree) {
+	PreSort(tree)
+	fmt.Println(sortedTree)
+	for i := 1; i <= len(sortedTree); i++ {
+		for j := 0; j < int(math.Pow(2, float64(i-1))); j++ {
+			fmt.Println(sortedTree[j])
+		}
+		fmt.Println("\n")
+	}
+}
+
 // 创建二叉树
 func Create(index int, value []int) (T *tree) {
 	T = &tree{}
@@ -51,7 +69,9 @@ func Create(index int, value []int) (T *tree) {
 // 前序
 func PreSort(treeNode *tree) {
 	if treeNode != nil {
-		fmt.Printf("%v ", treeNode.data)
+		//fmt.Printf("%v ", treeNode.data)
+		fmt.Println(treeNode.data)
+		sortedTree[treeNode.data] = treeNode.data
 		//ch<-treeNode.data
 		//list = append(list, treeNode.data)
 		if treeNode.left != nil {
@@ -109,6 +129,15 @@ func (t *Treer) GetNodeNum(treeNode *tree) *Treer {
 	return t
 }
 //2. 求二叉树的深度
+func (t *Treer) TreeDepth(treeNode *tree) int {
+	if treeNode.data != 0 {
+		t.Depth += 1
+		if treeNode.left.data > treeNode.right.data {
+			t.TreeDepth(treeNode.left)
+			t.TreeDepth(treeNode.right)
+		}
+	}
+}
 //3. 前序遍历，中序遍历，后序遍历
 //4.分层遍历二叉树（按层次从上往下，从左往右）
 //5. 将二叉查找树变为有序的双向链表
@@ -123,16 +152,18 @@ func (t *Treer) GetNodeNum(treeNode *tree) *Treer {
 //14.判断二叉树是不是完全二叉树
 
 func main() {
-	var t *Treer
+	//var t *Treer
 	value := []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15}
 	TreeRoot := Create(1, value)
 	//var list []int
-	PreSort(TreeRoot)
+	//PreSort(TreeRoot)
+	show(TreeRoot)
+	//fmt.Println(TreeRoot)
 
 	//os.Exit(1)
 	//AfterSort(TreeRoot)
-	num := t.GetNodeNum(TreeRoot).NodeNum
-	fmt.Println("\n", num)
+	//num := t.GetNodeNum(TreeRoot).NodeNum
+	//fmt.Println("\n", num)
 	//1. 求二叉树中的节点个数
 	//2. 求二叉树的深度
 	//3. 前序遍历，中序遍历，后序遍历

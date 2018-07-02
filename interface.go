@@ -2,8 +2,25 @@ package main
 
 import "fmt"
 
-func main()  {
-	var a interface{} = 3
+type A interface{
+	Test() string
+}
+type AT struct {
 
-	fmt.Println(a)
+}
+
+func (a *AT) Test() string {
+	return "babsbsf"
+}
+
+
+func main()  {
+	//var a interface{} = 3
+
+	var b AT
+	var c A
+	//b = 3
+
+	fmt.Println(b.Test())
+	fmt.Println(c.Test())
 }
