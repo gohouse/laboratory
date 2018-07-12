@@ -1,0 +1,15 @@
+[DbConfig]
+    Default = "mysql_yz"
+    SetMaxOpenConns = 300
+    SetMaxIdleConns = 10
+[Connections]
+    [Connections.mysql_yz]
+        host = "180.97.188.201"
+        username = "idfas"
+        password = "Mysql777"
+        port = "3306"
+        database = "idfas"
+        charset = "utf8"
+        protocol = "tcp"
+        prefix = "idfa_"
+        driver = "mysql"

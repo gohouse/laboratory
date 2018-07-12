@@ -1,21 +1,18 @@
 package main
 
 import (
-	_ "github.com/go-sql-driver/mysql" //import DB driver
 	"fmt"
-	"errors"
+	"github.com/gohouse/laboratory/utils"
 )
 
+type HttpHander struct{}
+type Mstring string
 
 func main() {
-	res := test222(test333)
-	fmt.Println(res())
-}
 
-func test222(task func() error) func() error {
-	return task
-}
+	a := 104
+	for i := 0; i < 100; i++ {
+		fmt.Println("insert into idfa_users(mobile) values("+utils.ParseStr(a+i)+");")
+	}
 
-func test333() error {
-	return errors.New("error 222")
 }

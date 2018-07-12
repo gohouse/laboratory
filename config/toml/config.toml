@@ -1,0 +1,10 @@
+Province = "上海"
+Tag = "shh"
+[City]
+Name = "上海"
+Id = 1
+jokeName = "魔都"
+[[City.Area]]
+AreaName = "浦东新区"
+[[City.Area]]
+AreaName = "黄浦区"

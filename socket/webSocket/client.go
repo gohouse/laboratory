@@ -71,7 +71,7 @@ func main() {
 	_, err = conn.Write([]byte("Hello !"));
 	go clientConnHandler(conn);
 
-	//主线程阻塞，等待Singal结束
+	//主线程阻塞，等待Signal结束
 	for {
 		//条件变量同步等待
 		gCondition.Wait();
