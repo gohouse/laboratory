@@ -4,6 +4,9 @@ import (
 	"github.com/gohouse/gorose"
 	_ "github.com/go-sql-driver/mysql"
 	"strings"
+	"github.com/robfig/cron"
+	"log"
+	"time"
 )
 
 var config = map[string]string{ // 定义名为 mysql_dev 的数据库配置
@@ -24,17 +27,26 @@ var fields = []string{
 	//"d.check_user_name",
 	"b.check_org_name",
 	"a.del_user",
-	"c.health_code",
-	"c.health_func_cat",
 	"b.org_id",
 	"b.org_type",
-	"c.rainbowcode",
 	"a.reason",
 	"b.resource_org_name",
 	"a.sample_state",
 	"b.scaname",
 	"b.scbid",
 	"b.scbname",
+	"a.status",
+	"b.ueid",
+	"b.user",
+	"a.create_at",
+	"a.update_at",
+	"b.fa_org_name",
+	"b.fa_org_id",
+	"b.org_name",
+
+	"c.health_code",
+	"c.health_func_cat",
+	"c.rainbowcode",
 	"c.sp_d_28",
 	"c.sp_d_38",
 	"c.sp_d_46",
@@ -65,16 +77,9 @@ var fields = []string{
 	"c.sp_s_5",
 	"c.sp_s_64",
 	"c.sp_s_68",
-	"c.sp_s_71",
-	"a.status",
 	"c.submit_d_flag",
-	"b.ueid",
-	"b.user",
-	"a.create_at",
-	"a.update_at",
-	"b.fa_org_name",
-	"b.fa_org_id",
-	"b.org_name",
+	"c.created_at",
+	"c.updated_at",
 }
 
 func init() {
@@ -87,6 +92,38 @@ func init() {
 
 func main() {
 	defer connection.Close()
+	log.Println("cron running: ", time.Now().Format("2006-01-02 15:04:05"))
+	// 开始迁移
+	Migration()
+}
+
+func Crontab() {
+	i := 0
+	c := cron.New()
+	// 每分钟的第 44s 执行
+	//spec := "44 */1 * * * ?"
+	//每3分钟的第一秒执行一次
+	spec2 := "1 */1 * * * ?"
+	c.AddFunc(spec2, func() {
+		i++
+		log.Println("cron running: ", time.Now().Format("2006-01-02 15:04:05"), i)
+		Migration()
+	})
+	c.Start()
+
+	select{}
+}
+
+func test() {
+	//fmt.Println(234)// 记录log
+	M("fd_sample_list_log").Data(map[string]interface{}{
+		"sample_code":"1",
+		"mark": "同步失败:sp_s_16",
+		"errors": "sdf",
+	})
+}
+
+func Migration() {
 	var lastDate string
 	// 获取最后一条插入的时间
 	lastUpDate, _ := M("fd_sample_list").Order("update_at desc").Value("update_at")
@@ -100,10 +137,12 @@ func main() {
 		Join("fd_task_down b on a.tdid=b.tdid").
 		Join("fd_samples c on a.sample_code=c.sp_s_16").
 		Where("a.tdid", "!=", "0").
-		Where("a.update_at", ">", lastDate)
+		Where("a.update_at", ">=", lastDate)
 
 	db.Chunk(100, func(data []map[string]interface{}) {
 		if len(data) > 0 {
+			var result int
+			var err error
 			for _, item := range data {
 				sp_s_16 := item["sp_s_16"]
 				// 检查是否已经插入数据库
@@ -111,10 +150,18 @@ func main() {
 				db2 := connection.GetInstance()
 				item = MapValueNilToNull(item)
 				if count == 0 {
-					db2.Table("fd_sample_list").Data(item).Insert()
+					result,err = db2.Table("fd_sample_list").Data(item).Insert()
 				} else {
 					delete(item, "sp_s_16")
-					db2.Table("fd_sample_list").Where("sp_s_16", sp_s_16).Data(item).Update()
+					result,err = db2.Table("fd_sample_list").Where("sp_s_16", sp_s_16).Data(item).Update()
+				}
+				if err!=nil || result==0 {
+					// 记录log
+					M("fd_sample_list_log").Data(map[string]interface{}{
+						"sample_code":sp_s_16,
+						"mark": "同步失败:sp_s_16",
+						"errors": err.Error(),
+					})
 				}
 			}
 		}
