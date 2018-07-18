@@ -1,0 +1,25 @@
+# db 配置, 可以多个配置
+Default = "mysql"       # 这个是下边的配置key
+SetMaxOpenConns = 300
+SetMaxIdleConns = 10
+[Connections]
+    [Connections.mysql]  # 这个是key :  mysql
+        host = "192.168.200.248"
+        username = "gcore"
+        password = "gcore"
+        port = "3306"
+        database = "wcc_service_fooddrug"
+        charset = "utf8"
+        protocol = "tcp"
+        prefix = ""
+        driver = "mysql"
+    [Connections.mysql2]  # 这个是key :  mysql2
+        host = "192.168.200.248"
+        username = "gcore"
+        password = "gcore"
+        port = "3306"
+        database = "wcc_service_fooddrug"
+        charset = "utf8"
+        protocol = "tcp"
+        prefix = ""
+        driver = "mysql"

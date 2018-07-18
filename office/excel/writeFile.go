@@ -14,19 +14,14 @@ func main() {
 	datas := []map[string]interface{}{
 		{"a":1,"b":2,"c":3},
 		{"a":11,"b":12,"c":13},
+		{"a":"搞事情","b":22,"c":"汉字"},
 		{"a":21,"b":22,"c":23},
 	}
-	writeFileFromMultiData(filePath, datas)
-	//row = sheet.AddRow()
-	//cell = row.AddCell()
-	//cell.Value = "I am a cell!"
-	//err = file.Save("static/tmp/MyXLSXFile.xlsx")
-	//if err != nil {
-	//	fmt.Printf(err.Error())
-	//}
+	ExportExcel(filePath, datas)
+
 }
 
-func writeFileFromMultiData(filePath string, datas []map[string]interface{}) error {
+func ExportExcel(filePath string, datas []map[string]interface{}) error {
 	var file *xlsx.File
 	var sheet *xlsx.Sheet
 	var row *xlsx.Row
