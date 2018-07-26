@@ -15,7 +15,7 @@ type tree struct {
 // 各个方法的值
 type Treer struct {
 	NodeNum int
-	Depth int
+	Depth   int
 }
 
 type Binary interface {
@@ -59,13 +59,14 @@ func Create(index int, value []int) (T *tree) {
 	T = &tree{}
 	T.data = value[index-1]
 	//fmt.Printf("index %v value %v \n", index, T.data)
-	if index < len(value)-1 &&		// 限制数据超限
-		2*index+1 <= len(value) {	// 判断是否到了最底层
+	if index < len(value)-1 && // 限制数据超限
+		2*index+1 <= len(value) { // 判断是否到了最底层
 		T.left = Create(2*index, value)
 		T.right = Create(2*index+1, value)
 	}
 	return T
 }
+
 // 前序
 func PreSort(treeNode *tree) {
 	if treeNode != nil {
@@ -84,6 +85,7 @@ func PreSort(treeNode *tree) {
 		return
 	}
 }
+
 // 中序
 func MiddleSort(treeNode *tree) {
 	if treeNode != nil {
@@ -98,6 +100,7 @@ func MiddleSort(treeNode *tree) {
 		return
 	}
 }
+
 // 后序
 func AfterSort(treeNode *tree) {
 	if treeNode != nil {
@@ -128,6 +131,7 @@ func (t *Treer) GetNodeNum(treeNode *tree) *Treer {
 	}
 	return t
 }
+
 //2. 求二叉树的深度
 func (t *Treer) TreeDepth(treeNode *tree) int {
 	if treeNode.data != 0 {
@@ -137,7 +141,9 @@ func (t *Treer) TreeDepth(treeNode *tree) int {
 			t.TreeDepth(treeNode.right)
 		}
 	}
+	//return t.Depth
 }
+
 //3. 前序遍历，中序遍历，后序遍历
 //4.分层遍历二叉树（按层次从上往下，从左往右）
 //5. 将二叉查找树变为有序的双向链表

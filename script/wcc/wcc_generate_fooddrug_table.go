@@ -84,6 +84,71 @@ var fields = []string{
 	"c.created_at",
 	"c.updated_at",
 }
+var fieldsSelect = []string{
+	"b.check_org_id",
+	"d.tname as check_user_name",
+	"b.check_org_name",
+	"a.del_user",
+	"b.org_id",
+	"b.org_type",
+	"a.reason",
+	"b.resource_org_name",
+	"a.sample_state",
+	"b.scaname",
+	"b.scbid",
+	"b.scbname",
+	"a.status",
+	"b.ueid",
+	"b.user",
+	"a.create_at",
+	"a.update_at",
+	"b.fa_org_name",
+	"b.fa_org_id",
+	"b.org_name",
+
+	"c.health_code",
+	"c.health_func_cat",
+	"c.rainbowcode",
+	"c.sp_d_28",
+	"c.sp_d_38",
+	"c.sp_d_46",
+	"c.sp_d_86",
+	"c.sp_i_jgback",
+	"c.sp_i_state",
+	"c.sp_s_1",
+	"c.sp_s_13",
+	"c.sp_s_14",
+	"c.sp_s_16",
+	"c.sp_s_17",
+	"c.sp_s_18",
+	"c.sp_s_19",
+	"c.sp_s_2",
+	"c.sp_s_2_1",
+	"c.sp_s_20",
+	"c.sp_s_202",
+	"c.sp_s_215",
+	"c.sp_s_220",
+	"c.sp_s_27",
+	"c.sp_s_3",
+	"c.sp_s_35",
+	"c.sp_s_37",
+	"c.sp_s_4",
+	"c.sp_s_43",
+	"c.sp_s_44",
+	"c.sp_s_45",
+	"c.sp_s_5",
+	"c.sp_s_64",
+	"c.sp_s_68",
+	"c.submit_d_flag",
+	"c.created_at",
+	"c.updated_at",
+
+	"b.fcc_grade_one_name",
+	"b.fcc_grade_two_name",
+	"b.fcc_grade_three_name",
+	"b.fcc_grade_four_name",
+	"a.sample_code",
+}
 
 func init() {
 }
@@ -98,7 +163,8 @@ func main() {
 	}
 	log.Println("cron running: ", time.Now().Format("2006-01-02 15:04:05"))
 	// 开始迁移
-	Crontab()
+	//Crontab()
+	Migration()
 }
 
 func parseFlag(key string) string {
@@ -156,27 +222,51 @@ func decodeDbToml() map[string]interface{} {
 func Migration() {
 	var lastDate string
 	// 获取最后一条插入的时间
-	lastUpDate, _ := M("fd_sample_list").Order("update_at desc").Value("update_at")
+	lastUpDate, err3 := M("fd_sample_list").Order("update_at desc").Value("update_at")
+	//fmt.Println(lastUpDate, err3)
+	//return
+	if err3 != nil {
+		// 记录log
+		M("fd_sample_list_log").Data(map[string]interface{}{
+			"sample_code": "",
+			"mark":        "未获取到插入历史数据",
+			"errors":      err3.Error(),
+		}).Insert()
+	}
 	//fmt.Println(lastUpDate)
-	if lastUpDate == nil  {
+	if lastUpDate == nil {
 		//lastDate = time.Now().Format("2006-01-02 15:04:05")
-		lastDate = "2017-02-01"
+		lastDate = "2016-02-01"
 	} else {
 		lastDate = lastUpDate.(string)
 	}
+	lastDate = "2018-07-10"
+	fmt.Println(lastDate)
 	db := connection.GetInstance()
 	db.Table("fd_sample_code a").
 		Fields(strings.Join(fields, ",")).
-		Join("fd_task_down b on a.tdid=b.tdid").
-		Join("fd_samples c on a.sample_code=c.sp_s_16").
+		LeftJoin("fd_task_down b on a.tdid=b.tdid").
+		LeftJoin("fd_samples c on a.sample_code=c.sp_s_16").
 		LeftJoin("fd_user_info d on b.ueid=d.id and b.org_type=d.user_type").
-		Where("a.tdid", "!=", "0").
+	//Where("a.tdid", "!=", "0").
 		Where("a.update_at", ">=", lastDate)
-	//	db.First()
-	//	fmt.Println(db.LastSql)
-	//	fmt.Println(db)
-	//	return
-	//	os.Exit(1)
+	resTest, err5 := db.First()
+	//fmt.Println(db.LastSql)
+	//os.Exit(1)
+	if err5 != nil {
+		// 记录log
+		M("fd_sample_list_log").Data(map[string]interface{}{
+			"sample_code": "",
+			"mark":        "相关条件未查出数据" + db.LastSql,
+			"errors":      err5.Error(),
+		}).Insert()
+	}
+
+	if resTest == nil {
+		fmt.Println("相关条件未查出数据")
+		return
+	}
+
 	db.Chunk(100, func(data []map[string]interface{}) {
 		if len(data) > 0 {
 			var result int
@@ -184,11 +274,36 @@ func Migration() {
 			for _, item := range data {
 				sp_s_16 := item["sp_s_16"]
 				// 检查是否已经插入数据库
-				count, _ := M("fd_sample_list").Where("sp_s_16", sp_s_16).Count()
+				count, err2 := M("fd_sample_list").Where("sp_s_16", sp_s_16).Count()
+				if err2 != nil {
+					// 记录log
+					M("fd_sample_list_log").Data(map[string]interface{}{
+						"sample_code": sp_s_16,
+						"mark":        "统计出错",
+						"errors":      err2.Error(),
+					}).Insert()
+				}
+				// item做兼容
+				if item["sp_s_17"]==nil || item["sp_s_17"].(string) == "" {
+					item["sp_s_17"] = item["fcc_grade_one_name"]
+				}
+				if item["sp_s_18"]==nil || item["sp_s_18"].(string) == "" {
+					item["sp_s_18"] = item["fcc_grade_two_name"]
+				}
+				if item["sp_s_19"]==nil || item["sp_s_19"].(string) == "" {
+					item["sp_s_19"] = item["fcc_grade_three_name"]
+				}
+				if item["sp_s_20"]==nil || item["sp_s_20"].(string) == "" {
+					item["sp_s_20"] = item["fcc_grade_four_name"]
+				}
+				if item["sp_s_16"]==nil || item["sp_s_16"].(string) == "" {
+					item["sp_s_16"] = item["sample_code"]
+				}
 				db2 := connection.GetInstance()
 				item = MapValueNilToNull(item)
 				if count == 0 {
 					result, err = db2.Table("fd_sample_list").Data(item).Insert()
+					fmt.Println(db2.LastSql)
 				} else {
 					delete(item, "sp_s_16")
 					result, err = db2.Table("fd_sample_list").Where("sp_s_16", sp_s_16).Data(item).Update()
@@ -197,11 +312,18 @@ func Migration() {
 					// 记录log
 					M("fd_sample_list_log").Data(map[string]interface{}{
 						"sample_code": sp_s_16,
-						"mark":        "同步失败:sp_s_16",
+						"mark":        "同步失败:" + db2.LastSql,
 						"errors":      fmt.Sprint(err),
 					}).Insert()
 				}
 			}
+		} else {
+			// 记录log
+			M("fd_sample_list_log").Data(map[string]interface{}{
+				"sample_code": "",
+				"mark":        "暂无数据",
+				"errors":      "",
+			}).Insert()
 		}
 	})
 }

@@ -13,10 +13,22 @@ import (
 	"github.com/gohouse/laboratory/bootService"
 	"fmt"
 	"github.com/gohouse/gorose/utils"
+	"os"
 )
 
 var config = map[string]string{ // 定义名为 mysql_dev 的数据库配置
 	"host": "180.97.188.201", // 数据库地址
+	"username": "idfas",      // 数据库用户名
+	"password": "Mysql777",   // 数据库密码
+	"port": "3306",           // 端口
+	"database": "idfas",      // 链接的数据库名字
+	"charset": "utf8",        // 字符集
+	"protocol": "tcp",        // 链接协议
+	"prefix": "idfa_",        // 表前缀
+	"driver": "mysql",        // 数据库驱动(mysql,sqlite,postgres,oracle,mssql)
+}
+var config2 = map[string]string{ // 定义名为 mysql_dev 的数据库配置
+	"host": "47.96.235.53", // 数据库地址
 	"username": "idfas",      // 数据库用户名
 	"password": "Mysql777",   // 数据库密码
 	"port": "3306",           // 端口
@@ -44,8 +56,20 @@ func main() {
 	fmt.Println("cron running: ", time.Now().Format("2006-01-02 15:04:05"))
 	log.Info("cron running: ", time.Now().Format("2006-01-02 15:04:05"))
 	// 开始迁移
-	//ReleaseTimeoutTask()
-	Crontab()
+	ReleaseTimeoutTask()
+	//Crontab()
+}
+
+func test() {
+	//t := M("user_task").Where("status", 1).
+	//	Where("created_at", ">=", helper.GetDate().YesterdayStart).
+	//	Where("created_at", "<",
+	//	time.Now().Add(-time.Minute * 15).Format("2006-01-02 15:04:05"))
+	//res,_ := t.Get()
+	//count := 0
+	//for _,item := range res{
+	//	// 查询是否重新开始了
+	//}
 }
 
 func parseFlag(key string) string {
@@ -84,12 +108,15 @@ func ReleaseTimeoutTask() {
 	log.Info("ReleaseTimeoutTask")
 	// 查出当天超时数据
 	var datetime = helper.GetDate()
-	t := M("user_task").Where("status", 1).Where("created_at", ">=", datetime.TodayStart).
-		Where("created_at", "<", time.Now().Add(-time.Minute * 15).Format("2006-01-02 15:04:05"))
+	t := M("user_task").Where("status", 1).
+		Where("created_at", ">=", datetime.YesterdayStart).
+		Where("created_at", "<",
+			time.Now().Add(-time.Minute * 15).Format("2006-01-02 15:04:05"))
 	//fmt.Println(time.Now().Format("2006-01-02 03:04:05"))
 	//res222, _ := t.First()
 	//fmt.Println(t.LastSql)
 	//fmt.Println(res222)
+	//fmt.Println(t.Count())
 	//os.Exit(1)
 	t.Chunk(100, func(datas []map[string]interface{}) {
 		// 开始处理
@@ -99,6 +126,9 @@ func ReleaseTimeoutTask() {
 				if len(item) == 0 {
 					break
 				}
+				fmt.Println(item)
+				fmt.Println(len(item))
+				os.Exit(1)
 				db := NewDBInstance()
 				res, err := db.Transaction(func() error {
 					// 标记超时

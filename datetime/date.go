@@ -5,10 +5,18 @@ import (
 	"fmt"
 )
 
+const DATE_FORMAT = "2006-01-02"
+const DATETIME_FORMAT = "2006-01-02 15:04:05"
 
 func main() {
 	res := GetDate()
 	fmt.Println(res)
+	// ===============
+	res2,_ := time.Parse(DATETIME_FORMAT, res.YesterdayStart)
+	y,m,d := res2.Date()
+	day := time.Date(y, m, d, 0, 0, 0, 0, time.Local)
+	dayEnd := time.Date(y, m, d, 23, 59, 59, 999, time.Local)
+	fmt.Println(day.Format(DATE_FORMAT+" 00:00:00"), dayEnd.Format(DATETIME_FORMAT))
 }
 
 type DateTime struct {
@@ -20,8 +28,6 @@ type DateTime struct {
 	Now string
 }
 
-const DATE_FORMAT = "2006-01-02"
-const DATETIME_FORMAT = "2006-01-02 03:04:05"
 func tmp() {
 	year, month, day := time.Now().Date()
 	today := time.Date(year, month, day, 0, 0, 0, 0, time.Local)

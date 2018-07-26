@@ -5,13 +5,13 @@ import (
 	"reflect"
 )
 
-type T struct {
+type T2 struct {
 	A int
 	B string
 }
 
 func main() {
-	t := T{23, "skidoo"}
+	t := T2{23, "skidoo"}
 	s := reflect.ValueOf(&t).Elem()
 	typeOfT := s.Type()
 	for i := 0; i < s.NumField(); i++ {
