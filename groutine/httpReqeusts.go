@@ -13,7 +13,7 @@ func main() {
 	//var url = "http://localhost:8002/gettaskinfo?id="
 	var url = "http://localhost:8002/admin/GetTaskList"
 	//var url2 = "http://localhost:8002/gettaskinfo?id="
-	for i := 0; i < 150; i++{
+	for i := 0; i < 50; i++{
 		go oper(fmt.Sprint(url), i)
 	}
 	time.Sleep(10*time.Second)

@@ -1,10 +1,10 @@
 #!/bin/bash
 
-rm -f releaseTimeoutTask.bin
+rm -f clearTask.bin
 
-CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags '-w -s' -o releaseTimeoutTask.bin
+CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags '-w -s' -o clearTask.bin
 
-upx releaseTimeoutTask.bin
+upx clearTask.bin
 
 basepath=$(cd `dirname $0`; pwd)
 
@@ -14,7 +14,7 @@ expectSSHFile=expectSsh
 ip="180.97.188.201"
 port="4321"
 password="Admin132"
-file="releaseTimeoutTask.bin"
+file="clearTask.bin"
 path="/www/sites/go"
 
 expect $basepath/"$expectScpFile" "$ip" "$port" "$password" "$file" "$path"

@@ -13,7 +13,6 @@ import (
 	"github.com/gohouse/laboratory/bootService"
 	"fmt"
 	"github.com/gohouse/gorose/utils"
-	"os"
 )
 
 var config = map[string]string{ // 定义名为 mysql_dev 的数据库配置
@@ -126,9 +125,9 @@ func ReleaseTimeoutTask() {
 				if len(item) == 0 {
 					break
 				}
-				fmt.Println(item)
-				fmt.Println(len(item))
-				os.Exit(1)
+				//fmt.Println(item)
+				//fmt.Println(len(item))
+				//os.Exit(1)
 				db := NewDBInstance()
 				res, err := db.Transaction(func() error {
 					// 标记超时
