@@ -1,42 +1,32 @@
 package main
 
 import (
-	"context"
 	"fmt"
+	"github.com/gohouse/gorose"
 )
 
+type db struct {
+	Table string
+}
+func (d *db) find(id interface{}) interface{} {
+	return d.Table
+}
+
+type userModel struct {
+	db
+	Table string
+}
+
+func UserModel() *userModel {
+	return &userModel{db:db{Table:"test"}}
+}
+
 func main() {
-	InitValues()
-	var s *MyContext
-	fmt.Println(s.C)
-}
+	//fmt.Println(UserModel().find(2))
 
-type MyValues struct {
-	m map[string]string
-}
-
-func (v MyValues) Get(key string) string {
-	return v.m[key]
-}
-
-type MyContext struct {
-	V MyValues
-	C context.Context
-}
-
-func InitValues()  {
-	var v *MyValues
-	v.m = map[string]string{
-		"a":"aa",
-		"b":"bb",
-	}
-
-	var c *MyContext
-	c.C = context.WithValue(context.Background(), "myvalues", v)
-}
-
-func (m *MyContext) GetItem() string {
-	var ctx context.Context
-
-	return ctx.Value("myvalues").(MyValues).Get("a")
+	var (
+		Um = &gorose.Model{Table:"test"}
+	)
+	//
+	fmt.Println(Um.Test())
 }

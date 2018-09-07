@@ -1,12 +1,10 @@
 package main
 
-import (
-	"fmt"
-	"time"
-)
+import "fmt"
 
 func main() {
-	a := fmt.Sprintf("static/%v-%v-%v.xlsx",time.Now().Format("20060102150405"),
-		"名字", 23)
+
+	a := fmt.Sprintf("asdf%v",12)
+
 	fmt.Println(a)
 }

@@ -2,17 +2,25 @@ package main
 
 import (
 	"fmt"
-	"github.com/gohouse/laboratory/utils"
+	"github.com/gohouse/superType"
 )
 
-type HttpHander struct{}
-type Mstring string
+func main()  {
+	var ss superType.String = " asdf,sdfsa"
 
-func main() {
+	a:= ss.Split(",")
+	b:= ss.Length()
+	c:= ss.String()
+	d:= ss.Index(",")
+	e:= ss.Trim()
+	f:= ss.Trim("a")
+	g:= ss.Replace("a", "m", -1)
 
-	a := 104
-	for i := 0; i < 100; i++ {
-		fmt.Println("insert into idfa_users(mobile) values("+utils.ParseStr(a+i)+");")
-	}
-
+	fmt.Println(a)
+	fmt.Println(b)
+	fmt.Println(c)
+	fmt.Println(d)
+	fmt.Println(e)
+	fmt.Println(f)
+	fmt.Println(g)
 }
