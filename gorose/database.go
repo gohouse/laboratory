@@ -1,7 +1,7 @@
 package gorose
 
 import (
-	"github.com/gohouse/laboratory/dp/builder"
+	"github.com/gohouse/laboratory/gorose/builder"
 )
 
 type Database struct {
@@ -18,7 +18,7 @@ func (d *Database) Table(arg string) *Database {
 	return d
 }
 
-func (d *Database) BuildSql(b string) string {
+func (d *Database) BuildSql(b string) (string, error) {
 	switch b {
 
 	case "select":
@@ -28,5 +28,5 @@ func (d *Database) BuildSql(b string) string {
 		return builder.BuildExecute(d.connection.driver)
 	}
 
-	return ""
+	return "",nil
 }

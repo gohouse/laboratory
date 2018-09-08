@@ -1,13 +1,14 @@
-package config
+package parser
 
 import (
+	"github.com/gohouse/laboratory/gorose/config"
 	"testing"
 	"fmt"
 )
 
-func TestConfigParser_Toml(test *testing.T) {
+func TestFileParser_Toml(test *testing.T) {
 	//var file = "/Users/fizz/go/src/github.com/gohouse/laboratory/dp/config/mysql.toml"
-	var file = ConfigFiles["toml"]
+	var file = config.DemoParserFiles["toml"]
 
 	var confP = &TomlConfigParser{}
 

@@ -10,10 +10,6 @@ var drivers = map[string]IDriver{
 	config.SQLITE: SqliteDriver{},
 }
 
-type IDriver interface {
-	Drive(d string) (string, error)
-}
-
 func NewDriver(d string) (string, error) {
 	if dr, ok := drivers[d]; ok {
 		return dr.Drive(d)

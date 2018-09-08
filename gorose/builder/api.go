@@ -9,11 +9,6 @@ var builders = map[string]IBuilder{
 	config.SQLITE: SqliteBuilder{},
 }
 
-type IBuilder interface {
-	BuildQuery() (string,error)
-	BuildExecute() (string,error)
-}
-
 func BuildQuery(d string) (string,error) {
 	return builders[d].BuildQuery()
 }

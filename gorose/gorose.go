@@ -1,6 +1,6 @@
 package gorose
 
-import "github.com/gohouse/laboratory/dp/driver"
+import "github.com/gohouse/laboratory/gorose/driver"
 
 type Connection struct {
 	driver string
@@ -13,7 +13,7 @@ func Open(dr string) *Connection {
 }
 
 func (c *Connection) drive(dr string) *Connection {
-	dsns := driver.NewDriver(dr)
+	dsns,_ := driver.NewDriver(dr)
 	return &Connection{driver: dr, dsn: dsns}
 }
 

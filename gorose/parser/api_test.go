@@ -1,13 +1,14 @@
-package config
+package parser
 
 import (
+	"github.com/gohouse/laboratory/gorose/config"
 	"testing"
 	"fmt"
 )
 
-func TestConfigParser_NewConfigParser(test *testing.T) {
+func TestFileParser_New(test *testing.T) {
 
-	pr, err := NewConfigParser(ConfigFiles["json"],"json")
+	pr, err := NewFileParser(config.DemoParserFiles["json"],"json")
 
 	if err != nil {
 		test.Error("FAIL: read file failed.", err)

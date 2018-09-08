@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/gohouse/laboratory/dp"
+	"github.com/gohouse/laboratory/gorose"
 )
 
 func main() {

@@ -1,4 +1,4 @@
-package config
+package parser
 
 import (
 	"io/ioutil"
@@ -8,7 +8,7 @@ import (
 type JsonConfigParser struct {
 }
 
-func (c JsonConfigParser) Parse(file string) (p *ConfigParser, err error) {
+func (c JsonConfigParser) Parse(file string) (p *FileParser, err error) {
 	var fp []byte
 	fp, err = ioutil.ReadFile(file)
 	if err != nil {
