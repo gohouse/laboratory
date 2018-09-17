@@ -1,14 +1,14 @@
 package parser
 
 import (
+	"fmt"
 	"github.com/gohouse/laboratory/gorose/config"
 	"testing"
-	"fmt"
 )
 
 func TestFileParser_New(test *testing.T) {
 
-	pr, err := NewFileParser(config.DemoParserFiles["json"],"json")
+	pr, err := NewFileParser(config.DemoParserFiles["json"], "json")
 
 	if err != nil {
 		test.Error("FAIL: read file failed.", err)
@@ -20,5 +20,3 @@ func TestFileParser_New(test *testing.T) {
 
 	test.Log(fmt.Sprintf("PASS: json %v", pr))
 }
-
-

@@ -2,6 +2,7 @@ package driver
 
 type SqliteDriver struct {
 }
-func (sql SqliteDriver) Drive(d string) (string, error) {
-	return d+" driver",nil
+
+func (sql SqliteDriver) GetDsn(d string) (string, error) {
+	return d + " driver", nil
 }

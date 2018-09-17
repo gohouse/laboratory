@@ -6,7 +6,7 @@ import (
 
 type Database struct {
 	connection *Connection
-	table string
+	table      string
 }
 
 func (d *Database) Get() string {
@@ -24,9 +24,9 @@ func (d *Database) BuildSql(b string) (string, error) {
 	case "select":
 		return builder.BuildQuery(d.connection.driver)
 
-	case "insert","update","delete":
+	case "insert", "update", "delete":
 		return builder.BuildExecute(d.connection.driver)
 	}
 
-	return "",nil
+	return "", nil
 }

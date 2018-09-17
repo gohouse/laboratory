@@ -4,7 +4,6 @@ type IParser interface {
 	Parse(d string) (p *FileParser, err error)
 }
 
-
 type FileParser struct {
 	Driver          string            // 驱动: mysql/sqlite/oracle/mssql/postgres
 	Default         string            // 默认 dsn

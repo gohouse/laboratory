@@ -3,31 +3,27 @@ package driver
 import (
 	"errors"
 	"github.com/gohouse/laboratory/gorose/config"
+	"database/sql"
 )
 
+// 检查解析器是否实现了接口
+var mysqlDriver IDriver = &MysqlDriver{}
+var sqliteDriver IDriver = &SqliteDriver{}
+
+// 注册解析器
 var drivers = map[string]IDriver{
-	config.MYSQL:  MysqlDriver{},
-	config.SQLITE: SqliteDriver{},
+	config.MYSQL:  mysqlDriver,
+	config.SQLITE: sqliteDriver,
 }
 
-func NewDriver(d string) (string, error) {
-	if dr, ok := drivers[d]; ok {
-		return dr.Drive(d)
+func NewDriver(d string) (dsn string, err error) {
+	var ok bool
+	var dr IDriver
+	if dr, ok = drivers[d]; !ok {
+		return dsn, errors.New("no driver matched")
 	}
-	return "",errors.New("no driver matched")
+	dsn,err = dr.GetDsn(d)
+	if err!=nil {
+		return
+	}
 }
-
-//func Drive(d string) string {
-//	var dri IDriver
-//
-//	switch strings.ToLower(d) {
-//
-//	case MYSQL:
-//		dri = new(MysqlDriver)
-//
-//	case SQLITE:
-//		dri = new(SqliteDriver)
-//	}
-//
-//	return dri.Drive()
-//}

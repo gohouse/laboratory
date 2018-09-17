@@ -1,8 +1,8 @@
 package parser
 
 import (
-	"io/ioutil"
 	"github.com/BurntSushi/toml"
+	"io/ioutil"
 )
 
 type TomlConfigParser struct {

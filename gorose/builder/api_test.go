@@ -1,12 +1,12 @@
 package builder
 
 import (
-	"testing"
 	"fmt"
+	"testing"
 )
 
 func TestConfigParser_BuildQuery(test *testing.T) {
-	dr,err := BuildQuery("mysql")
+	dr, err := BuildQuery("mysql")
 	if err != nil {
 		test.Error("FAIL: driver failed.", err)
 		return
@@ -14,5 +14,3 @@ func TestConfigParser_BuildQuery(test *testing.T) {
 
 	test.Log(fmt.Sprintf("PASS: driver: %v", dr))
 }
-
-

@@ -1,9 +1,9 @@
 package parser
 
 import (
+	"fmt"
 	"github.com/gohouse/laboratory/gorose/config"
 	"testing"
-	"fmt"
 )
 
 func TestFileParser_Json(test *testing.T) {
@@ -21,5 +21,3 @@ func TestFileParser_Json(test *testing.T) {
 
 	test.Log(fmt.Sprintf("PASS: json parser %v", pr))
 }
-
-

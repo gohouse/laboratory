@@ -5,19 +5,19 @@ import (
 	"reflect"
 )
 
-type Student struct {
+type Student2 struct {
 	Name  string `json:"stu_name"`
-	Age   int
+	Age   int	`json:"age"`
 	Score float32
 
 }
 
-func (s Student) Print(){
+func (s Student2) Print(){
 	fmt.Println(s)
 }
 
 
-func (s Student) Set(name string,age int,score float32){
+func (s Student2) Set(name string,age int,score float32){
 	s.Age = age
 	s.Name = name
 	s.Score = score
@@ -32,7 +32,7 @@ func TestStruct(a interface{}) {
 }
 
 func main() {
-	var a Student = Student{
+	var a = Student2{
 		Name:  "stu01",
 		Age:   18,
 		Score: 92.8,

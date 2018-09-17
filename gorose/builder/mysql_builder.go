@@ -4,9 +4,9 @@ type MysqlBuilder struct {
 }
 
 func (sql MysqlBuilder) BuildQuery() (string, error) {
-	return "MysqlBuilder BuildQuery",nil
+	return "MysqlBuilder BuildQuery", nil
 }
 
 func (sql MysqlBuilder) BuildExecute() (string, error) {
-	return "MysqlBuilder BuildExecute",nil
+	return "MysqlBuilder BuildExecute", nil
 }

@@ -4,16 +4,21 @@ import (
 	"github.com/gohouse/laboratory/gorose/config"
 )
 
+// 检查解析器是否实现了接口
+var mysqlBuilder IBuilder = &MysqlBuilder{}
+var sqliteBuilder IBuilder = &SqliteBuilder{}
+
+// 注册解析器
 var builders = map[string]IBuilder{
-	config.MYSQL:  MysqlBuilder{},
-	config.SQLITE: SqliteBuilder{},
+	config.MYSQL:  mysqlBuilder,
+	config.SQLITE: sqliteBuilder,
 }
 
-func BuildQuery(d string) (string,error) {
+func BuildQuery(d string) (string, error) {
 	return builders[d].BuildQuery()
 }
 
-func BuildExecute(d string) (string,error) {
+func BuildExecute(d string) (string, error) {
 	return builders[d].BuildExecute()
 }
 
