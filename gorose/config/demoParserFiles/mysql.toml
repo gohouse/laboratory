@@ -1,8 +1,0 @@
-Driver = "mysql"
-Default = "mysql"
-QueryLog = false
-SetMaxOpenConns = 0
-SetMaxIdleConns = 0
-[Dsns]
-    mysql = "username:password@tcp(localhost:5555)/dbname?charset=utf8"
-    sqlite = "~/path/to/foo.db"
