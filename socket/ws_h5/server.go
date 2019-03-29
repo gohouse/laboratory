@@ -34,6 +34,7 @@ func main() {
 }
 
 func h_index(w http.ResponseWriter, r *http.Request) {
+	//fmt.Fprint(w,"asdf")
 
 	http.ServeFile(w, r, "index.html")
 }

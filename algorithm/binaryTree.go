@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"math"
 )
 
 // 二叉树定义
@@ -42,29 +41,6 @@ var sortedTree map[int]int
 
 func init() {
 	sortedTree = make(map[int]int)
-}
-func show(tree *tree) {
-	PreSort(tree)
-	fmt.Println(sortedTree)
-	for i := 1; i <= len(sortedTree); i++ {
-		for j := 0; j < int(math.Pow(2, float64(i-1))); j++ {
-			fmt.Println(sortedTree[j])
-		}
-		fmt.Println("\n")
-	}
-}
-
-// 创建二叉树
-func Create(index int, value []int) (T *tree) {
-	T = &tree{}
-	T.data = value[index-1]
-	//fmt.Printf("index %v value %v \n", index, T.data)
-	if index < len(value)-1 && // 限制数据超限
-		2*index+1 <= len(value) { // 判断是否到了最底层
-		T.left = Create(2*index, value)
-		T.right = Create(2*index+1, value)
-	}
-	return T
 }
 
 // 前序

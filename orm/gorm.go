@@ -12,6 +12,7 @@ func main() {
 		fmt.Println(err,11111)
 		return
 	}
+	db.AutoMigrate()
 	fmt.Println(db,222222)
 	defer db.Close()
 	aaa,err2 := db.DB().Query("select * from users limit 1")
