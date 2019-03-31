@@ -1,0 +1,130 @@
+package linkedList
+
+type Node struct {
+	data interface{}
+	next *Node
+}
+
+type LinkedList struct {
+	head *Node
+	size int
+}
+
+func (list *LinkedList) AddToFirst(data interface{}) {
+	tmp := &Node{data: data, next: list.head}
+	list.head = tmp
+	list.size++
+}
+
+func (list *LinkedList) AddToLast(data interface{}) {
+	current := list.head
+	for current.next != nil {
+		current = current.next
+	}
+	if current.next == nil {
+		current.next = &Node{data: data}
+	}
+	list.size++
+}
+
+func (list *LinkedList) Show() (res []interface{}) {
+	var current = list.head
+	for current != nil {
+		res = append(res, current.data)
+		current = current.next
+	}
+	return
+}
+
+func (list *LinkedList) Get(index int) *Node {
+	if list.size <= index+1 || list.size == 0 {
+		return nil
+	}
+	var i = 0
+	current := list.head
+	for i != index {
+		current = current.next
+		i++
+	}
+	return current
+}
+
+func (list *LinkedList) GetPrev(index int) *Node {
+	if list.size < index || list.size <=1 || index==0 {
+		return nil
+	}
+	var i = 0
+	current := list.head
+	for i != index-1 {
+		current = current.next
+		i++
+	}
+	return current
+}
+
+func (list *LinkedList) Add(index int, data interface{}) bool {
+	if index == 0 {
+		list.AddToFirst(data)
+	} else if index == list.size {
+		list.AddToLast(data)
+	} else if index>list.size {
+		return false
+	}
+
+	prevNode := list.GetPrev(index)
+
+	if prevNode==nil {
+		return false
+	}
+	prevNode.next = &Node{data,prevNode.next}
+
+	list.size++
+
+	return true
+}
+
+func (list *LinkedList) Delete(index int) bool {
+	prevNode := list.GetPrev(index)
+
+	if prevNode==nil {
+		return false
+	}
+
+	prevNode.next = prevNode.next.next
+
+	return true
+}
+
+func (list *LinkedList) Reverse() *LinkedList {
+	if list==nil {
+		return list
+	}
+	var tmp = &Node{-1, list.head}
+
+	var prev = tmp.next
+	var current = prev.next
+
+	for current!=nil {
+		prev.next = current.next
+		current.next = tmp.next
+		tmp.next = current
+		current = prev.next
+	}
+
+	return &LinkedList{tmp.next,list.size}
+}
+
+func (list *LinkedList) ValueOf(data interface{}) (index int) {
+	if list.size==0 {
+		return -1
+	}
+	i:=0
+	current := list.head
+
+	for current.data!=data {
+		current=current.next
+		i++
+	}
+
+	return i
+}
