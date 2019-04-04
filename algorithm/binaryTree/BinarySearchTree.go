@@ -1,33 +1,4 @@
-package main
-
-import "fmt"
-
-func main() {
-	bst := New()
-	fmt.Println(bst.Data == 0)
-	bst.Insert(10)
-	bst.Insert(8)
-	bst.Insert(21)
-	bst.Insert(11)
-	bst.Insert(30)
-	bst.Insert(28)
-	bst.Insert(29)
-	bst.Insert(50)
-
-	fmt.Printf("最大:%v,最小:%v", bst.MaxNode().Data, bst.MinNode().Data)
-	fmt.Println("\n前序遍历:")
-	fmt.Println(bst.PreOrder())
-	fmt.Println("中序遍历:")
-	fmt.Println(bst.InOrder())
-	fmt.Println("后序遍历:")
-	fmt.Println(bst.PostOrder())
-	fmt.Println("查找 21 是否存在: ", bst.Search(21))
-	fmt.Println("删除 21, 继续查看前序遍历结果: ")
-	bst.Delete(21)
-	fmt.Println(bst.PreOrder())
-	fmt.Println("最大深度: ", bst.Depth())
-	fmt.Println("最小深度: ", bst.DepthMin())
-}
+package binaryTree
 
 //const btdemo = `二叉树示例
 //	10
@@ -58,6 +29,20 @@ type IBinarySearchTree interface {
 	// 最小深度
 	DepthMin() int
 	// 宽度
+
+
+	//3. 前序遍历，中序遍历，后序遍历
+	//4.分层遍历二叉树（按层次从上往下，从左往右）
+	//5. 将二叉查找树变为有序的双向链表
+	//6. 求二叉树第K层的节点个数
+	//7. 求二叉树中叶子节点的个数
+	//8. 判断两棵二叉树是否结构相同
+	//9. 判断二叉树是不是平衡二叉树
+	//10. 求二叉树的镜像
+	//11. 求二叉树中两个节点的最低公共祖先节点
+	//12. 求二叉树中节点的最大距离
+	//13. 由前序遍历序列和中序遍历序列重建二叉树
+	//14.判断二叉树是不是完全二叉树
 }
 
 type BinarySearchTree struct {

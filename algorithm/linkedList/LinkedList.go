@@ -84,6 +84,10 @@ func (list *LinkedList) Add(index int, data interface{}) bool {
 }
 
 func (list *LinkedList) Delete(index int) bool {
+	if list.size==1 {
+		list.head = nil
+		return true
+	}
 	prevNode := list.GetPrev(index)
 
 	if prevNode==nil {
@@ -92,9 +96,13 @@ func (list *LinkedList) Delete(index int) bool {
 
 	prevNode.next = prevNode.next.next
 
+	list.size--
+
 	return true
 }
-
+// Reverse 反转链表
+// 第一种方案: 原理, 从第二个开始, 依次放入到前边即可, 空间复杂度为O(1)
+// 第二种方案: 原理, 循环构建新的链表, 空间复杂度为O(n)
 func (list *LinkedList) Reverse() *LinkedList {
 	if list==nil {
 		return list
