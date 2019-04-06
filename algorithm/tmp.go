@@ -1,13 +1,30 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"reflect"
+)
+
+type a struct {
+	key interface{}
+	val interface{}
+}
+type b struct {
+	c []*a
+	d []a
+}
 
 func main() {
-	var a = "deg34_@#$%^&*()wabc"
+	var a = &b{make([]*a,3),make([]a,3)}
 
-	res := hash(a)
+	fmt.Println(cap(a.c), cap(a.d))
 
-	fmt.Println(res)
+	fmt.Println(a.c)
+	fmt.Println("a.c[1]",a.c[1])
+	fmt.Println(a.d)
+	fmt.Println("a.d[1]",a.d[1])
+	fmt.Println(a.d[1].key==nil)
+	fmt.Println(reflect.TypeOf(a.c))
 }
 
 func hash(k interface{}) int {
