@@ -6,8 +6,8 @@ import (
 
 func TestHashTable(t *testing.T) {
 	var ht = NewHashTable(&Options{
-		Capacity:5,
-		LoadFactor:0.8,
+		Capacity:6,
+		LoadFactor:0.9,
 		Debug:true,
 	})
 	ht.Put(1,"a")

@@ -4,11 +4,22 @@ import (
 	"crypto/md5"
 	"crypto/sha1"
 	"fmt"
+	"hash/fnv"
 	"io"
 	"os"
 )
 
-func main() {
+func main()  {
+	fmt.Println(hash2("sfs"))
+}
+
+func hash2(key string) int {
+	h := fnv.New32a()
+	h.Write([]byte(key))
+	return int(h.Sum32())
+}
+
+func hash1() {
 	teststring := "welcome to beijing"
 
 	//MD5

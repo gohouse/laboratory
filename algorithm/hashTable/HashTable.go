@@ -12,6 +12,8 @@ type IHashTable interface {
 	Get(key interface{}) *Entry
 	Remove(key interface{}) error
 	Hash(key interface{}) int
+	Size() int
+	IsEmpty() bool
 	Show()
 }
 
@@ -190,6 +192,14 @@ func (h *HashTable) Remove(key interface{}) error {
 		prev = prev.next
 	}
 	return errors.New("the given key is not exists")
+}
+
+func (h *HashTable) Size() int {
+	return h.count
+}
+
+func (h *HashTable) IsEmpty() bool {
+	return h.count==0
 }
 
 func (h *HashTable) Hash(key interface{}) int {
