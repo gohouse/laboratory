@@ -3,8 +3,8 @@ package main
 import "fmt"
 
 type a struct {
-
 }
+
 func main() {
 
 	res := a{}

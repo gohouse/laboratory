@@ -9,7 +9,7 @@ import (
 	"os"
 )
 
-func main()  {
+func main() {
 	fmt.Println(hash2("sfs"))
 }
 

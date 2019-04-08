@@ -97,9 +97,9 @@ func (t *tree2) del2(val int) bool {
 
 	} else if current.left != nil && current.right != nil { // 该节点没有2个子节点, 则使用中序后继节点
 		successor := getSuccessor(current)
-		if (current == t) {
+		if current == t {
 			t = successor
-		} else if (isLeft) {
+		} else if isLeft {
 			parent.left = successor
 		} else {
 			parent.right = successor
@@ -139,7 +139,7 @@ func getSuccessor(delNode *tree2) *tree2 {
 		current = current.left
 	}
 	//后继节点不是删除节点的右子节点，将后继节点替换删除节点
-	if (successor != delNode.right) {
+	if successor != delNode.right {
 		successorParent.left = successor.right
 		successor.right = delNode.right
 	}

@@ -1,5 +1,7 @@
 package hashTable
 
+// hashtable的golang实现版本, 对外api都提供了线程安全锁
+
 import (
 	"errors"
 	"fmt"
@@ -8,20 +10,27 @@ import (
 )
 
 type IHashTable interface {
+	// 添加
 	Put(key interface{}, value interface{}) error
+	// 获取key对应的值
 	Get(key interface{}) interface{}
+	// 删除
 	Remove(key interface{}) error
+	// 当前hashtable的数据量
 	Size() int
+	// 是否为空
 	IsEmpty() bool
+	// 打印每一个hash槽内的内容
 	Show()
 }
 
 type Options struct {
 	// hashtable容量，设置默认桶容量
-	Capacity   uint
-	// 负载因子 0<=x<=1
+	Capacity uint
+	// 负载因子 0<= x <=1
 	LoadFactor float64
-	Debug      bool
+	// 是否记录扩容log
+	Debug bool
 }
 
 type Entry struct {
@@ -64,12 +73,12 @@ func NewHashTable(o *Options) *HashTable {
 	}
 
 	var ht = &HashTable{
-		table:make([]*Entry, caps),
-		capacity:int(o.Capacity),
-		loadFactor:o.LoadFactor,
-		debug:o.Debug,
-		lock:sync.RWMutex{},
-		threshold:int(o.LoadFactor * float64(caps)),
+		table:      make([]*Entry, caps),
+		capacity:   int(o.Capacity),
+		loadFactor: o.LoadFactor,
+		debug:      o.Debug,
+		lock:       sync.RWMutex{},
+		threshold:  int(o.LoadFactor * float64(caps)),
 	}
 	return ht
 }
@@ -77,7 +86,7 @@ func NewHashTable(o *Options) *HashTable {
 func (h *HashTable) Put(key interface{}, value interface{}) error {
 	h.lock.Lock()
 	defer h.lock.Unlock()
-	
+
 	h.insert(key, value)
 
 	h.count++
@@ -93,7 +102,7 @@ func (h *HashTable) Put(key interface{}, value interface{}) error {
 func (h *HashTable) insert(key interface{}, value interface{}) error {
 
 	findNode := h.getEntry(key)
-	if findNode!=nil {
+	if findNode != nil {
 		findNode.value = value
 		return nil
 	}
@@ -107,7 +116,7 @@ func (h *HashTable) insert(key interface{}, value interface{}) error {
 	if entry == nil {
 		h.table[hash] = newEntry
 	} else {
-		for entry.next!=nil {
+		for entry.next != nil {
 			entry = entry.next
 		}
 		entry.next = newEntry
@@ -117,7 +126,7 @@ func (h *HashTable) insert(key interface{}, value interface{}) error {
 }
 
 func (h *HashTable) reHash() error {
-	
+
 	var oldTable = h.table
 	var oldCap = h.capacity
 	// 新的容量为
@@ -153,7 +162,7 @@ func (h *HashTable) Get(key interface{}) interface{} {
 
 	e := h.getEntry(key)
 
-	if e!=nil {
+	if e != nil {
 		return e.value
 	}
 
@@ -220,7 +229,7 @@ func (h *HashTable) Size() int {
 func (h *HashTable) IsEmpty() bool {
 	h.lock.RLock()
 	defer h.lock.RUnlock()
-	return h.count==0
+	return h.count == 0
 }
 
 func (h *HashTable) hash(key interface{}) int {

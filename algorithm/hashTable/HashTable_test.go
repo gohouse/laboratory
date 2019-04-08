@@ -7,19 +7,19 @@ import (
 
 func TestHashTable(t *testing.T) {
 	var ht = NewHashTable(&Options{
-		Capacity:6,
-		LoadFactor:0.9,
-		Debug:true,
+		Capacity:   6,
+		LoadFactor: 0.9,
+		Debug:      true,
 	})
-	ht.Put(1,"a")
-	ht.Put(2,"a")
-	ht.Put(14,"a")
-	ht.Put(11,"a")
-	ht.Put(12,"a")
-	ht.Put("key1","a")
-	ht.Put("key2","a")
-	ht.Put("key3","a")
-	ht.Put("key13","a")
+	ht.Put(1, "a")
+	ht.Put(2, "a")
+	ht.Put(14, "a")
+	ht.Put(11, "a")
+	ht.Put(12, "a")
+	ht.Put("key1", "a")
+	ht.Put("key2", "a")
+	ht.Put("key3", "a")
+	ht.Put("key13", "a")
 
 	ht.Show()
 
@@ -34,23 +34,23 @@ func TestHashTable(t *testing.T) {
 
 func BenchmarkHashTable_Put(b *testing.B) {
 	var ht = NewHashTable(&Options{
-		Capacity:1000,
-		LoadFactor:0.8,
-		Debug:true,
+		Capacity:   1000,
+		LoadFactor: 0.8,
+		Debug:      true,
 	})
-	for i:=0;i<b.N;i++{
-		ht.Put(i,i)
+	for i := 0; i < b.N; i++ {
+		ht.Put(i, i)
 	}
 }
 func TestHashTable_Put(t *testing.T) {
 	var ht = NewHashTable(&Options{
-		Capacity:100,
-		LoadFactor:0.8,
-		Debug:true,
+		Capacity:   100,
+		LoadFactor: 0.8,
+		Debug:      true,
 	})
 
-	for i:=1000;i<5000;i++{
-		ht.Put(i,i)
+	for i := 1000; i < 5000; i++ {
+		ht.Put(i, i)
 	}
 
 	fmt.Println(ht.Size())
