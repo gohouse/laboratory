@@ -9,9 +9,8 @@ import (
 
 type IHashTable interface {
 	Put(key interface{}, value interface{}) error
-	Get(key interface{}) *Entry
+	Get(key interface{}) interface{}
 	Remove(key interface{}) error
-	Hash(key interface{}) int
 	Size() int
 	IsEmpty() bool
 	Show()
@@ -40,41 +39,45 @@ type HashTable struct {
 	// hashtable的设定容量
 	capacity int
 
-	// Hashtable中元素的实际数量
-	count int
-
-	// 阈值，用于判断是否需要调整Hashtable的容量（threshold = 容量*加载因子）
-	threshold int
-
 	// 加载因子, 超过此比例就自动扩容
 	loadFactor float64
 
 	// debug
 	debug bool
 
-	lock sync.Mutex
+	// 读写锁
+	lock sync.RWMutex
+
+	// 阈值，用于判断是否需要调整Hashtable的容量（threshold = 容量*加载因子）
+	threshold int
+
+	// Hashtable中元素的实际数量
+	count int
 }
 
 var _ IHashTable = &HashTable{}
 
 func NewHashTable(o *Options) *HashTable {
-	var cap = o.Capacity
-	if cap == 0 {
-		cap = 1
+	var caps = o.Capacity
+	if caps == 0 {
+		caps = 1
 	}
-	var ht = new(HashTable)
-	ht.loadFactor = o.LoadFactor
-	ht.capacity = int(o.Capacity)
-	ht.threshold = int(o.LoadFactor * float64(cap))
-	ht.table = make([]*Entry, cap)
-	ht.debug = o.Debug
+
+	var ht = &HashTable{
+		table:make([]*Entry, caps),
+		capacity:int(o.Capacity),
+		loadFactor:o.LoadFactor,
+		debug:o.Debug,
+		lock:sync.RWMutex{},
+		threshold:int(o.LoadFactor * float64(caps)),
+	}
 	return ht
 }
 
 func (h *HashTable) Put(key interface{}, value interface{}) error {
 	h.lock.Lock()
 	defer h.lock.Unlock()
-
+	
 	h.insert(key, value)
 
 	h.count++
@@ -88,42 +91,44 @@ func (h *HashTable) Put(key interface{}, value interface{}) error {
 }
 
 func (h *HashTable) insert(key interface{}, value interface{}) error {
+
+	findNode := h.getEntry(key)
+	if findNode!=nil {
+		findNode.value = value
+		return nil
+	}
+
+	newEntry := &Entry{key: key, value: value}
+
 	// 找出key所在的table
-	hash := h.Hash(key)
-
+	hash := h.hash(key)
 	var entry = h.table[hash]
-	if entry == nil {
-		h.table[hash] = &Entry{key: key, value: value}
-	} else if entry.key == key {
-		entry.value = value
-	} else {
-		for entry.next != nil {
-			// 如果已存在该key，则修改
-			if entry.next.key == key {
-				entry.next.value = value
-				return nil
-			}
-			entry.next = entry.next.next
-		}
 
-		entry.next = &Entry{key: key, value: value}
+	if entry == nil {
+		h.table[hash] = newEntry
+	} else {
+		for entry.next!=nil {
+			entry = entry.next
+		}
+		entry.next = newEntry
 	}
 
 	return nil
 }
 
 func (h *HashTable) reHash() error {
+	
 	var oldTable = h.table
 	var oldCap = h.capacity
 	// 新的容量为
 	var newCap = oldCap*2 + 1
+
 	// 设置新的门槛
 	h.threshold = int(float64(newCap) * h.loadFactor)
 	// 设置新的容量
 	h.capacity = newCap
 	// 设置新的entry
-	var newEntry = make([]*Entry, newCap)
-	h.table = newEntry
+	h.table = make([]*Entry, newCap)
 
 	// 记录log
 	if h.debug {
@@ -135,10 +140,6 @@ func (h *HashTable) reHash() error {
 	for i := oldCap - 1; i >= 0; i-- {
 		current := oldTable[i]
 		for current != nil {
-			//h.table[h.Hash(current.key)] = &Entry{
-			//	key:   current.key,
-			//	value: current.value,
-			//}
 			h.insert(current.key, current.value)
 			current = current.next
 		}
@@ -146,9 +147,22 @@ func (h *HashTable) reHash() error {
 	return nil
 }
 
-func (h *HashTable) Get(key interface{}) *Entry {
+func (h *HashTable) Get(key interface{}) interface{} {
+	h.lock.RLock()
+	defer h.lock.RUnlock()
+
+	e := h.getEntry(key)
+
+	if e!=nil {
+		return e.value
+	}
+
+	return nil
+}
+
+func (h *HashTable) getEntry(key interface{}) *Entry {
 	// 获取key的hash所在table
-	hash := h.Hash(key)
+	hash := h.hash(key)
 	// 获取对应的entry
 	entry := h.table[hash]
 
@@ -168,8 +182,11 @@ func (h *HashTable) Get(key interface{}) *Entry {
 }
 
 func (h *HashTable) Remove(key interface{}) error {
+	h.lock.Lock()
+	defer h.lock.Unlock()
+
 	// 获取key的hash所在table
-	hash := h.Hash(key)
+	hash := h.hash(key)
 	// 获取对应的entry
 	var prev = h.table[hash]
 
@@ -195,15 +212,19 @@ func (h *HashTable) Remove(key interface{}) error {
 }
 
 func (h *HashTable) Size() int {
+	h.lock.RLock()
+	defer h.lock.RUnlock()
 	return h.count
 }
 
 func (h *HashTable) IsEmpty() bool {
+	h.lock.RLock()
+	defer h.lock.RUnlock()
 	return h.count==0
 }
 
-func (h *HashTable) Hash(key interface{}) int {
-	return HashCode(key) % h.capacity
+func (h *HashTable) hash(key interface{}) int {
+	return int(uint(HashCode(key)) % uint(h.capacity))
 }
 
 func (h *HashTable) Show() {
