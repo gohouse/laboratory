@@ -21,11 +21,11 @@ func main() {
 	})
 
 	c.OnHTML("h1", func(e *colly.HTMLElement) {
-		//if strings.HasPrefix(e.Request.URL.String(), "https://jianshu.com/p/") {
+		//if strings.HasPrefix(e.Request.URL.ToPredict(), "https://jianshu.com/p/") {
 		//	fmt.Println(e.Text)
 		//}
 
-		//fmt.Println(e.Text, e.Request.URL.String())
+		//fmt.Println(e.Text, e.Request.URL.ToPredict())
 		fmt.Println(e.Text)
 	})
 

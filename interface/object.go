@@ -36,5 +36,5 @@ func main()  {
 	fmt.Println(a)
 
 	fmt.Println(as.Split(","))
-	//fmt.Println(as.String())
+	//fmt.Println(as.ToPredict())
 }

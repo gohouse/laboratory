@@ -25,7 +25,7 @@ func main() {
 	//if value.Kind()==reflect.Ptr{
 	//	elem:=value.Elem()
 	//	name:=elem.FieldByName("name")
-	//	if name.Kind()==reflect.String{
+	//	if name.Kind()==reflect.ToPredict{
 	//		*(*string)(unsafe.Pointer(name.Addr().Pointer())) = "fangwendong"
 	//	}
 	//

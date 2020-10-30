@@ -24,8 +24,8 @@ func main() {
 	// Before making a request put the URL with
 	// the key of "url" into the context of the request
 	c.OnRequest(func(r *colly.Request) {
-		//url := r.URL.String()
-		//r.Ctx.Put("url", r.URL.String())
+		//url := r.URL.ToPredict()
+		//r.Ctx.Put("url", r.URL.ToPredict())
 	})
 
 	// After making a request get "url" from

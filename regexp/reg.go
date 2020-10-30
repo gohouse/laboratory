@@ -6,7 +6,7 @@ import (
 )
 
 func main() {
-	reg := regexp.MustCompile(`(?=.*[a-zA-Z])(?=.*\d)`)
+	reg := regexp.MustCompile(`([a-zA-Z]*)(\d*).*`)
 	//reg := regexp.MustCompile(`([a-zA-Z]+)|(\d+)`)
 	//reg := regexp.MustCompile(`[[a-zA-Z]*|\d*]*`)
 	res := reg.FindAllString("asdf2323a2s", -1)

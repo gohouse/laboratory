@@ -1,0 +1,1 @@
+scp -P 11122 chat.zip  root@47.96.235.53:/www

@@ -26,7 +26,7 @@ func main() {
 			fmt.Println(e.Text)
 		}
 
-		//fmt.Println(e.Text, e.Request.URL.String())
+		//fmt.Println(e.Text, e.Request.URL.ToPredict())
 		//fmt.Println(e.Text)
 	})
 

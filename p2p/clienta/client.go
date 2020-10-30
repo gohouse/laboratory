@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"log"
 	"net"
-	"os"
 	"strconv"
 	"strings"
 	"time"
@@ -15,15 +14,16 @@ var tag string
 const HAND_SHAKE_MSG = "我是打洞消息"
 
 func main() {
-	if len(os.Args) < 2 {
-		fmt.Println("请输入一个客户端标志")
-		os.Exit(0)
-	}
-	// 当前进程标记字符串,便于显示
-	tag = os.Args[1]
-	srcAddr := &net.UDPAddr{IP: net.IPv4zero, Port: 9901} // 注意端口必须固定
-	dstAddr := &net.UDPAddr{IP: net.ParseIP("127.0.0.1"), Port: 9527}
-	conn, err := net.DialUDP("udp", srcAddr, dstAddr)
+	//if len(os.Args) < 2 {
+	//	fmt.Println("请输入一个客户端标志")
+	//	os.Exit(0)
+	//}
+	//// 当前进程标记字符串,便于显示
+	//tag = os.Args[1]
+	tag = "a-client"
+	localAddr := &net.UDPAddr{IP: net.IPv4zero, Port: 9901} // 注意端口必须固定
+	serverAddr := &net.UDPAddr{IP: net.ParseIP("127.0.0.1"), Port: 9527}
+	conn, err := net.DialUDP("udp", localAddr, serverAddr)
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -37,9 +37,9 @@ func main() {
 	}
 	conn.Close()
 	anotherPeer := parseAddr(string(data[:n]))
-	fmt.Printf("local:%s server:%s another:%s\n", srcAddr, remoteAddr, anotherPeer.String())
+	fmt.Printf("local:%s server:%s another:%s\n", localAddr, remoteAddr, anotherPeer.String())
 	// 开始打洞
-	bidirectionHole(srcAddr, &anotherPeer)
+	bidirectionHole(localAddr, &anotherPeer)
 }
 func parseAddr(addr string) net.UDPAddr {
 	log.Println(addr)

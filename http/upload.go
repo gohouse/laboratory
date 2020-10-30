@@ -21,8 +21,8 @@ func up(w http.ResponseWriter, r *http.Request)  {
 	r.ParseMultipartForm(8 << 20)
 	//title := r.ParseFormValue["title"]
 	fhs := r.MultipartForm.File["file[]"]
-	//options := r.MultipartForm.Value["options[]"]
-	//answers := r.MultipartForm.Value["answers[]"]
+	//options := r.MultipartForm.Type["options[]"]
+	//answers := r.MultipartForm.Type["answers[]"]
 
 	l := len(fhs)
 	optionDirs := make([]string, l)

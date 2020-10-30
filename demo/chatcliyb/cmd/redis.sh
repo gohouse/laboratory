@@ -1,0 +1,1 @@
+redis-cli -h redis-17876.c1.ap-southeast-1-1.ec2.cloud.redislabs.com -p 17876 -a DOiWgwDu7RaWdb5HIqh4TkmJbjoXQnt8
