@@ -13,7 +13,7 @@ import (
 func main() {
 	fmt.Println("des 加解密")
 	key := []byte("12345678")
-	src := []byte("我们的好啊我们的好啊")
+	src := []byte("我们的好啊我们的好啊我们的好啊我们的好啊我们的好啊我们的好啊我们的好啊我们的好啊我们的好啊我们的好啊我们的好啊我们的好啊")
 	cipherText := desEncrypt(src, key)
 	var str64 = base64.StdEncoding.EncodeToString(cipherText)
 	fmt.Printf("des加密之后的数据: %s\n", str64)
