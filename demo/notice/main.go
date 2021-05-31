@@ -41,7 +41,7 @@ func Notice() error {
 		createobject("wscript.shell").popup "notice for rest",3,"notice",4096+64 '3秒后自bai动关闭`
 		cmd = append(cmd, `cmd`, `/c`)
 		// content 写入文件
-		ioutil.WriteFile(shellfile, []byte(content), 777)
+		ioutil.WriteFile(shellfile, []byte(content), 0777)
 	default:
 		home, _ := user.Current()
 		shellfile = fmt.Sprintf("%s/tmp/notice_file.sh", home.HomeDir)
@@ -55,7 +55,7 @@ osascript -e "$cmd"
 say -v Ting-ting $content`
 		cmd = append(cmd, `sh`)
 		// content 写入文件
-		ioutil.WriteFile(shellfile, []byte(content), 777)
+		ioutil.WriteFile(shellfile, []byte(content), 0777)
 	}
 	log.Println("notice of:", content)
 	return exec.Command(strings.Join(cmd, " "), shellfile).Run()
